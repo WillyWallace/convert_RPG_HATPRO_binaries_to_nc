@@ -7,7 +7,7 @@ from typing import BinaryIO, Literal, TypeAlias
 
 import numpy as np
 
-import utils
+from utils import epoch2unix, seconds2date
 
 Fill_Value_Float = -999.0
 Fill_Value_Int = -99
@@ -61,7 +61,7 @@ class RpgBin:
 
     def __init__(self, file_list: list[str]):
         self.header, self.raw_data = stack_files(file_list)
-        self.raw_data["time"] = utils.epoch2unix(
+        self.raw_data["time"] = epoch2unix(
             self.raw_data["time"], self.header["_time_ref"]
         )
         self.date = self._get_date()
@@ -78,7 +78,7 @@ class RpgBin:
         time_median = float(np.ma.median(self.raw_data["time"]))
         date = (
             datetime.datetime.utcfromtimestamp(
-                utils.epoch2unix(time_median, self.header["_time_ref"])
+                epoch2unix(time_median, self.header["_time_ref"])
             )
             .strftime("%Y-%m-%d")
         )
@@ -86,7 +86,7 @@ class RpgBin:
         if float(date[0:4]) > today:
             date = (
                 datetime.datetime.utcfromtimestamp(
-                    utils.epoch2unix(
+                    epoch2unix(
                         time_median, self.header["_time_ref"], (1970, 1, 1)
                     )
                 )
@@ -109,7 +109,7 @@ class RpgBin:
         time = self.data["time"]
         ind = np.zeros(len(time), dtype=np.int32)
         for i, t in enumerate(time):
-            if "-".join(utils.seconds2date(t)[:3]) == self.date:
+            if "-".join(seconds2date(t)[:3]) == self.date:
                 ind[i] = 1
         self._screen(np.where(ind == 1)[0])
 

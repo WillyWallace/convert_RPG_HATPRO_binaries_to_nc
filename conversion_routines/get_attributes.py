@@ -4,7 +4,8 @@ from meta import (global_attributes,
                   ATTRIBUTES_COM,
                   ATTRIBUTES_brt,
                   ATTRIBUTES_irt,
-                  ATTRIBUTES_met)
+                  ATTRIBUTES_met,
+                  ATTRIBUTES_cbh)
 
 
 def add_global_attrs(_data):

@@ -10,7 +10,7 @@ out_path = '../data/nc/'
 data_types = ['cbh', 'irt']
 
 years = [2020]
-months = [7 , 8, 9, 10]
+months = [7, 8, 9, 10]
 days = np.arange(1, 31)
 
 for yy in years:
