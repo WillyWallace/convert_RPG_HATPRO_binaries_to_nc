@@ -95,11 +95,13 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
+Most code is based on 
+* [igmk GitHub](https://github.com/igmk/actris_mwr_pro)
+* [cloudnetpy GitHub](https://github.com/actris-cloudnet/mwrpy.git)
 
 Special thanks for templates and help during implementation.
 
 * [Readme Template](https://github.com/othneildrew/Best-README-Template)
 * [cloudnetpy GitHub](https://github.com/actris-cloudnet/cloudnetpy.git)
-* [cloudnetpy GitHub](https://github.com/actris-cloudnet/mwrpy.git)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
