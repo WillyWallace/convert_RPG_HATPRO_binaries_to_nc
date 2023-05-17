@@ -16,17 +16,15 @@ MetaData = namedtuple('MetaData', FIELDS, defaults=(None,) * len(FIELDS))
 
 
 global_attributes = {
-    'principal_investigator': 'Heike Kalesse-Los (heike.kalesse@uni-leipzig.de)' +
-                              'Andreas Foth (andreas.foth@uni-leipzig.de)',
-    'contact person': 'Andreas Foth (andreas.foth@uni-leipzig.de)',
-    'author': 'Andreas Foth (andreas.foth@uni-leipzig.de)',
+    'principal_investigator': 'Heike Kalesse-Los, Andreas Foth',
+    'contact_person': 'Andreas Foth',
+    'author': 'Andreas Foth',
     'history': 'Data converted from original RPG binaries',
     'source': 'micorwave radiometer manufactured by Radiometer Physics GmbH (RPG)',
     'comments': '',
     'conventions': 'CF-1.8',
-    'date of creation': str(datetime.datetime.utcnow()),
+    'date_of_creation': str(datetime.datetime.utcnow()),
 }
-
 
 DIMS_brt = {
     'rain': ['time'],
