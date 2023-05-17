@@ -4,14 +4,14 @@ from convert_rpg_bin import convert_data, make_xarray
 from get_attributes import get_data_attributes, add_global_attrs
 from utils import get_file_list
 
-raw_path = '../data/binary/'
-out_path = '../data/nc/'
+raw_path = '../example_data/binary/'
+out_path = '../example_data/nc/'
 
 data_types = ['cbh', 'irt']
 
 years = [2020]
-months = [7, 8, 9, 10]
-days = np.arange(1, 31)
+months = [7]
+days = np.arange(15, 17)
 
 for yy in years:
     for mm in months:
