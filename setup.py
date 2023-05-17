@@ -9,7 +9,6 @@ setup(
     url='https://github.com/WillyWallace/convert_RPG_HATPRO_binaries_to_nc.git',
     license='MIT',
     author='Andreas Foth',
-    author_email='andreas.foth@uni-leipzig.de',
     packages=find_packages(),
     include_package_data=True,
     python_requires='>=3.10',
