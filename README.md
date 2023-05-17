@@ -45,7 +45,7 @@ Below is an example of how run the script, which reads in the data and plots the
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/WillyWallace/eval_ac.git
+   git clone https://github.com/WillyWallace/convert_RPG_HATPRO_binaries_to_nc.git
    ```
 
 2. Install the package
@@ -58,9 +58,7 @@ Below is an example of how run the script, which reads in the data and plots the
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-1. set your specifications (e.g. paths of the ABSCAL.his file) in the user specifications section at the top within the evaluate_absolute_calibration.py routine 
-2. run the evaluate_absolute_calibration.py routine
-3. see the results in the results_ln2_cal.png image
+1. tbd
 
 <img src="eval_ac/results_ln2_cal.png" width="70%">
 
@@ -69,13 +67,15 @@ Below is an example of how run the script, which reads in the data and plots the
 <!-- ROADMAP -->
 ## Roadmap
 
+- [ ] add more binary conversion routines like IWV, LWP, SPC, ...
 - [ ] add meaningful docstrings
 - [ ] make documentation --> readthedocs
 - [ ] enable pip install ...
 - [ ] Released version 1
 - [ ] Add Tests
 
-See the [open issues](https://github.com/WillyWallace/eval_ac/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/WillyWallace/convert_RPG_HATPRO_binaries_to_nc
+/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -101,5 +101,6 @@ Special thanks for templates and help during implementation.
 
 * [Readme Template](https://github.com/othneildrew/Best-README-Template)
 * [cloudnetpy GitHub](https://github.com/actris-cloudnet/cloudnetpy.git)
+* [cloudnetpy GitHub](https://github.com/actris-cloudnet/mwrpy.git)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
