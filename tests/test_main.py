@@ -20,4 +20,4 @@ def test_convert_data():
     assert obj.header['_time_ref'] == 1
     assert obj.header['_n_f'] == 1
     assert np.allclose(obj.header['_f'], 10.5)
-    assert obj.header['n'] == 36760
+    assert obj.header['_n'] == 36760

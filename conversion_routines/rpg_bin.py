@@ -2,14 +2,16 @@
 This module contains all functions to read in RPG MWR binary files
 """
 
+import datetime
+import logging
+
 from collections.abc import Callable
 from io import SEEK_END
 from typing import BinaryIO, Literal, TypeAlias
-from conversion_routines.utils import epoch2unix, seconds2date
 
-import datetime
-import logging
 import numpy as np
+
+from conversion_routines.utils import epoch2unix, seconds2date
 
 
 FILL_VALUE_FLOAT = -999.0
@@ -73,6 +75,9 @@ class RpgBin:
         if str(file_list[0][-3:]).lower() != "his":
             self.find_valid_times()
 
+    def __str__(self):
+        return self.__class__.__name__
+
     def _init_data(self):
         for key, data in self.raw_data.items():
             self.data[key] = data
@@ -98,7 +103,7 @@ class RpgBin:
         return date
 
     def find_valid_times(self):
-        # sort timestamps
+        """sort timestamps"""
         time = self.data["time"]
         ind = time.argsort()
         self._screen(ind)
@@ -111,12 +116,13 @@ class RpgBin:
         # find valid date
         time = self.data["time"]
         ind = np.zeros(len(time), dtype=np.int32)
-        for i, t in enumerate(time):
-            if "-".join(seconds2date(t)[:3]) == self.date:
+        for i, j in enumerate(time):
+            if "-".join(seconds2date(j)[:3]) == self.date:
                 ind[i] = 1
         self._screen(np.where(ind == 1)[0])
 
     def _screen(self, ind: np.ndarray):
+        """_screen"""
         if len(ind) < 1:
             raise RuntimeError(["Error: no valid data for date: " + str(self.date)])
         n_time = len(self.data["time"])
@@ -136,7 +142,7 @@ def read_bls(file_name: str) -> tuple[dict, dict]:
     with open(file_name, "rb") as file:
         header = _read_from_file(
             file,
-            [("_code", "<i4"), ("n", "<i4"), ("_n_f", "<i4")],
+            [("_code", "<i4"), ("_n", "<i4"), ("_n_f", "<i4")],
         )
         if header["_code"] == 567846000:
             version = 2
@@ -154,14 +160,14 @@ def read_bls(file_name: str) -> tuple[dict, dict]:
         )
         header |= _read_from_file(file, [("_ang", "<f", header["_n_ang"])])
 
-        d_T = [
+        d_t = [
             ("time", "<i4"),
             ("rain", "b"),
             ("temp_sfc", "<f"),
             ("tb", "<f", header["_n_f"]),
             ("_angles", "<i4"),
         ]
-        data = _read_from_file(file, d_T, header["n"] * header["_n_ang"])
+        data = _read_from_file(file, d_t, header["_n"] * header["_n_ang"])
         _check_eof(file)
 
     data["elevation_angle"], data["azimuth_angle"] = _decode_angles(
@@ -177,7 +183,7 @@ def read_brt(file_name: str) -> tuple[dict, dict]:
     with open(file_name, "rb") as file:
         header = _read_from_file(
             file,
-            [("_code", "<i4"), ("n", "<i4"), ("_time_ref", "<i4"), ("_n_f", "<i4")],
+            [("_code", "<i4"), ("_n", "<i4"), ("_time_ref", "<i4"), ("_n_f", "<i4")],
         )
         if header["_code"] == 666666:
             version = 1
@@ -201,7 +207,7 @@ def read_brt(file_name: str) -> tuple[dict, dict]:
                 ("tb", "<f", header["_n_f"]),
                 ("_angles", "<f" if version == 1 else "<i4"),
             ],
-            header["n"],
+            header["_n"],
         )
         _check_eof(file)
 
@@ -214,7 +220,7 @@ def read_brt(file_name: str) -> tuple[dict, dict]:
 def read_blb(file_name: str) -> tuple[dict, dict]:
     """Reads BLB files and returns header and data as dictionary."""
     with open(file_name, "rb") as file:
-        header = _read_from_file(file, [("_code", "<i4"), ("n", "<i4")])
+        header = _read_from_file(file, [("_code", "<i4"), ("_n", "<i4")])
         if header["_code"] == 567845847:
             header["_n_f"] = 14
             version = 1
@@ -238,15 +244,15 @@ def read_blb(file_name: str) -> tuple[dict, dict]:
         )
         header |= _read_from_file(file, [("_ang", "<f", header["_n_ang"])])
         d_t = [("time", "<i4"), ("rain", "b")]
-        for n in range(header["_n_f"]):
-            d_t += [(f"tb_{n}", "<f", header["_n_ang"])]
-            d_t += [(f"temp_sfc_{n}", "<f")]
-        data = _read_from_file(file, d_t, header["n"])
+        for i in range(header["_n_f"]):
+            d_t += [(f"tb_{i}", "<f", header["_n_ang"])]
+            d_t += [(f"temp_sfc_{i}", "<f")]
+        data = _read_from_file(file, d_t, header["_n"])
         _check_eof(file)
 
     data_out = {
-        "tb": np.empty((header["n"], header["_n_f"], header["_n_ang"])),
-        "temp_sfc": np.empty((header["n"], header["_n_f"])),
+        "tb": np.empty((header["_n"], header["_n_f"], header["_n_ang"])),
+        "temp_sfc": np.empty((header["_n"], header["_n_f"])),
     }
     for key in data:
         if "tb_" in key:
@@ -272,7 +278,7 @@ def read_irt(file_name: str) -> tuple[dict, dict]:
             file,
             [
                 ("_code", "<i4"),
-                ("n", "<i4"),
+                ("_n", "<i4"),
                 ("_xmin", "<f"),
                 ("_xmax", "<f"),
                 ("_time_ref", "<i4"),
@@ -298,7 +304,7 @@ def read_irt(file_name: str) -> tuple[dict, dict]:
         d_t = [("time", "<i4"), ("rain", "b"), ("irt", "<f", (header["_n_f"],))]
         if version > 1:
             d_t += [("_angles", "<f" if version == 2 else "<i4")]
-        data = _read_from_file(file, d_t, header["n"])
+        data = _read_from_file(file, d_t, header["_n"])
         _check_eof(file)
 
     if "_angles" in data:
@@ -315,7 +321,7 @@ def read_hkd(file_name: str) -> tuple[dict, dict]:
     with open(file_name, "rb") as file:
         header = _read_from_file(
             file,
-            [("_code", "<i4"), ("n", "<i4"), ("_time_ref", "<i4"), ("_sel", "<i4")],
+            [("_code", "<i4"), ("_n", "<i4"), ("_time_ref", "<i4"), ("_sel", "<i4")],
         )
         d_t = [("time", "<i4"), ("alarm", "b")]
         if header["_sel"] & 0x1:
@@ -330,7 +336,7 @@ def read_hkd(file_name: str) -> tuple[dict, dict]:
             d_t += [("qual", "<i4")]
         if header["_sel"] & 0x20:
             d_t += [("status", "<i4")]
-        data = _read_from_file(file, d_t, header["n"])
+        data = _read_from_file(file, d_t, header["_n"])
         _check_eof(file)
 
     header = _fix_header(header)
@@ -340,7 +346,7 @@ def read_hkd(file_name: str) -> tuple[dict, dict]:
 def read_met(file_name: str) -> tuple[dict, dict]:
     """Reads MET files and returns header and data as dictionary."""
     with open(file_name, "rb") as file:
-        header = _read_from_file(file, [("_code", "<i4"), ("n", "<i4")])
+        header = _read_from_file(file, [("_code", "<i4"), ("_n", "<i4")])
         if header["_code"] == 599658943:
             header["_n_add"] = 0
         elif header["_code"] == 599658944:
@@ -396,7 +402,7 @@ def read_met(file_name: str) -> tuple[dict, dict]:
             hdt.append(("_adds8_max", "<f"))
         hdt.append(("_time_ref", "<i4"))
         header |= _read_from_file(file, hdt)
-        data = _read_from_file(file, d_t, header["n"])
+        data = _read_from_file(file, d_t, header["_n"])
         _check_eof(file)
 
     data["relative_humidity"] /= 100  # Converted in the original code
@@ -406,14 +412,14 @@ def read_met(file_name: str) -> tuple[dict, dict]:
 
 def read_cbh(file_name: str) -> tuple[dict, dict]:
     """Reads CBH files and returns header and data as dictionary."""
-    version: Literal[1]
+    # version: Literal[1]
 
     with open(file_name, "rb") as file:
         header = _read_from_file(
             file,
             [
                 ("_code", "<i4"),
-                ("n", "<i4"),
+                ("_n", "<i4"),
                 ("_xmin", "<f"),
                 ("_xmax", "<f"),
                 ("_time_ref", "<i4"),
@@ -421,7 +427,7 @@ def read_cbh(file_name: str) -> tuple[dict, dict]:
         )
 
         d_t = [("time", "<i4"), ("rain", "b"), ("cbh", "<f")]
-        data = _read_from_file(file, d_t, header["n"])
+        data = _read_from_file(file, d_t, header["_n"])
         _check_eof(file)
 
     header = _fix_header(header)
@@ -493,7 +499,7 @@ def _fix_header(header: dict) -> dict:
             header[key] = np.array(header[key], dtype=int)
         elif key in ["_xmin", "_xmax", "_f", "_ang"]:
             header[key] = np.array(header[key])
-        elif key in ["n", "_n_f", "_n_ang"]:
+        elif key in ["_n", "_n_f", "_n_ang"]:
             header[key] = int(header[key])
     return header
 

@@ -1,12 +1,14 @@
 """Module for general helper functions."""
 
+import glob
+import time
+
+# from numpy import ma
 from datetime import datetime, timezone
 from typing import NamedTuple
 from numpy import ma
 
 import numpy as np
-import glob
-import time
 
 
 SECONDS_PER_MINUTE = 60
@@ -18,6 +20,7 @@ EPOCH = tuple[int, int, int]
 
 
 class MetaData(NamedTuple):
+    """named tuple"""
     long_name: str
     units: str
     standard_name: str | None = None

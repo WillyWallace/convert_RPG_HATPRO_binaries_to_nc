@@ -1,13 +1,14 @@
 """
-This is the main routine which calls all other.
+This is the main routine which calls all others.
 """
 
 from os import path, makedirs
+
+import numpy as np
+
 from conversion_routines.convert_rpg_bin import convert_data, make_xarray
 from conversion_routines.get_attributes import get_data_attributes, add_global_attrs
 from conversion_routines.utils import get_file_list
-
-import numpy as np
 
 
 RAW_PATH = '../example_data/binary/'

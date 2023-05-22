@@ -1,12 +1,11 @@
 """
 This file contains all the meta information.
 """
+import datetime
 
+from collections import namedtuple
 from collections.abc import Callable
 from typing import TypeAlias
-from collections import namedtuple
-
-import datetime
 
 
 FIELDS = (
