@@ -2,10 +2,11 @@
 This module contains the conversion routines
 """
 
+from conversion_routines.rpg_bin import RpgBin
+from conversion_routines.utils import get_file_list
+
 import xarray as xr
-from rpg_bin import RpgBin
-from utils import get_file_list
-import meta
+import conversion_routines.meta
 
 
 def convert_data(

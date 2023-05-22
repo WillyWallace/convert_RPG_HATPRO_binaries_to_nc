@@ -5,7 +5,7 @@ This module contains all functions to read in RPG MWR binary files
 from collections.abc import Callable
 from io import SEEK_END
 from typing import BinaryIO, Literal, TypeAlias
-from utils import epoch2unix, seconds2date
+from conversion_routines.utils import epoch2unix, seconds2date
 
 import datetime
 import logging

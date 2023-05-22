@@ -1,12 +1,13 @@
 """Module for Level 1 Metadata"""
 
-from meta import (global_attributes,
-                  FIELDS, att_reader,
-                  ATTRIBUTES_COM,
-                  ATTRIBUTES_brt,
-                  ATTRIBUTES_irt,
-                  ATTRIBUTES_met,
-                  ATTRIBUTES_cbh)
+from conversion_routines.meta import (global_attributes,
+                                      FIELDS, att_reader,
+                                      ATTRIBUTES_COM,
+                                      ATTRIBUTES_brt,
+                                      ATTRIBUTES_irt,
+                                      ATTRIBUTES_met,
+                                      ATTRIBUTES_cbh
+                                      )
 
 
 def add_global_attrs(_data):

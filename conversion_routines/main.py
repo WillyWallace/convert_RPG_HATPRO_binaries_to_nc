@@ -3,9 +3,9 @@ This is the main routine which calls all other.
 """
 
 from os import path, makedirs
-from convert_rpg_bin import convert_data, make_xarray
-from get_attributes import get_data_attributes, add_global_attrs
-from utils import get_file_list
+from conversion_routines.convert_rpg_bin import convert_data, make_xarray
+from conversion_routines.get_attributes import get_data_attributes, add_global_attrs
+from conversion_routines.utils import get_file_list
 
 import numpy as np
 

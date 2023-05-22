@@ -46,7 +46,7 @@ def epoch2unix(epoch_time, time_ref, epoch: EPOCH = (2001, 1, 1)):
 
     Args:
         epoch_time (ndarray): 1-D array of seconds since (2001,1,1,0,0,0)
-        time_ref (ndarray): ...
+        time_ref (ndarray): 1: UTC, 0: Local Time
         epoch (ndarray): ...
 
     Returns:
