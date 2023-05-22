@@ -6,7 +6,7 @@ from conversion_routines.rpg_bin import RpgBin
 from conversion_routines.utils import get_file_list
 
 import xarray as xr
-import conversion_routines.meta
+import conversion_routines.meta as meta
 
 
 def convert_data(
