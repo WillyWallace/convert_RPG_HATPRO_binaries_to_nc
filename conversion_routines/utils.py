@@ -1,19 +1,20 @@
 """Module for general helper functions."""
 
-import glob
-import time
 from datetime import datetime, timezone
 from typing import NamedTuple
+from numpy import ma
 
 import numpy as np
-from numpy import ma
+import glob
+import time
+
 
 SECONDS_PER_MINUTE = 60
 SECONDS_PER_HOUR = 3600
 SECONDS_PER_DAY = 86400
-Fill_Value_Float = -999.0
-Fill_Value_Int = -99
-Epoch = tuple[int, int, int]
+FILL_VALUE_FLOAT = -999.0
+FILL_VALUE_INT = -99
+EPOCH = tuple[int, int, int]
 
 
 class MetaData(NamedTuple):
@@ -40,11 +41,13 @@ def seconds2hours(time_in_seconds: np.ndarray) -> np.ndarray:
     return fraction_hour
 
 
-def epoch2unix(epoch_time, time_ref, epoch: Epoch = (2001, 1, 1)):
+def epoch2unix(epoch_time, time_ref, epoch: EPOCH = (2001, 1, 1)):
     """Converts seconds since (2001,1,1,0,0,0) to unix time in UTC.
 
     Args:
         epoch_time (ndarray): 1-D array of seconds since (2001,1,1,0,0,0)
+        time_ref (ndarray): ...
+        epoch (ndarray): ...
 
     Returns:
         ndarray: Unix time in seconds since (1970,1,1,0,0,0).
@@ -61,7 +64,7 @@ def epoch2unix(epoch_time, time_ref, epoch: Epoch = (2001, 1, 1)):
     return unix_time
 
 
-def seconds2date(time_in_seconds: float, epoch: Epoch = (1970, 1, 1)) -> list:
+def seconds2date(time_in_seconds: float, epoch: EPOCH = (1970, 1, 1)) -> list:
     """Converts seconds since some epoch to datetime (UTC).
     Args:
         time_in_seconds: Seconds since some epoch.

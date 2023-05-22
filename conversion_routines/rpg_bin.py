@@ -1,16 +1,19 @@
-"""This module contains all functions to read in RPG MWR binary files"""
-import datetime
-import logging
+"""
+This module contains all functions to read in RPG MWR binary files
+"""
+
 from collections.abc import Callable
 from io import SEEK_END
 from typing import BinaryIO, Literal, TypeAlias
-
-import numpy as np
-
 from utils import epoch2unix, seconds2date
 
-Fill_Value_Float = -999.0
-Fill_Value_Int = -99
+import datetime
+import logging
+import numpy as np
+
+
+FILL_VALUE_FLOAT = -999.0
+FILL_VALUE_INT = -99
 
 
 def stack_files(file_list: list[str]) -> tuple[dict, dict]:
@@ -151,14 +154,14 @@ def read_bls(file_name: str) -> tuple[dict, dict]:
         )
         header |= _read_from_file(file, [("_ang", "<f", header["_n_ang"])])
 
-        dt = [
+        d_T = [
             ("time", "<i4"),
             ("rain", "b"),
             ("temp_sfc", "<f"),
             ("tb", "<f", header["_n_f"]),
             ("_angles", "<i4"),
         ]
-        data = _read_from_file(file, dt, header["n"] * header["_n_ang"])
+        data = _read_from_file(file, d_T, header["n"] * header["_n_ang"])
         _check_eof(file)
 
     data["elevation_angle"], data["azimuth_angle"] = _decode_angles(
@@ -234,11 +237,11 @@ def read_blb(file_name: str) -> tuple[dict, dict]:
             file, [("_f", "<f", header["_n_f"]), ("_n_ang", "<i4")]
         )
         header |= _read_from_file(file, [("_ang", "<f", header["_n_ang"])])
-        dt = [("time", "<i4"), ("rain", "b")]
+        d_t = [("time", "<i4"), ("rain", "b")]
         for n in range(header["_n_f"]):
-            dt += [(f"tb_{n}", "<f", header["_n_ang"])]
-            dt += [(f"temp_sfc_{n}", "<f")]
-        data = _read_from_file(file, dt, header["n"])
+            d_t += [(f"tb_{n}", "<f", header["_n_ang"])]
+            d_t += [(f"temp_sfc_{n}", "<f")]
+        data = _read_from_file(file, d_t, header["n"])
         _check_eof(file)
 
     data_out = {
@@ -292,10 +295,10 @@ def read_irt(file_name: str) -> tuple[dict, dict]:
         else:
             header |= _read_from_file(file, [("_n_f", "<i4")])
             header |= _read_from_file(file, [("_f", "<f", (header["_n_f"],))])
-        dt = [("time", "<i4"), ("rain", "b"), ("irt", "<f", (header["_n_f"],))]
+        d_t = [("time", "<i4"), ("rain", "b"), ("irt", "<f", (header["_n_f"],))]
         if version > 1:
-            dt += [("_angles", "<f" if version == 2 else "<i4")]
-        data = _read_from_file(file, dt, header["n"])
+            d_t += [("_angles", "<f" if version == 2 else "<i4")]
+        data = _read_from_file(file, d_t, header["n"])
         _check_eof(file)
 
     if "_angles" in data:
@@ -314,20 +317,20 @@ def read_hkd(file_name: str) -> tuple[dict, dict]:
             file,
             [("_code", "<i4"), ("n", "<i4"), ("_time_ref", "<i4"), ("_sel", "<i4")],
         )
-        dt = [("time", "<i4"), ("alarm", "b")]
+        d_t = [("time", "<i4"), ("alarm", "b")]
         if header["_sel"] & 0x1:
-            dt += [("longitude", "<f"), ("latitude", "<f")]
+            d_t += [("longitude", "<f"), ("latitude", "<f")]
         if header["_sel"] & 0x2:
-            dt += [("temp", "<f", 4)]
+            d_t += [("temp", "<f", 4)]
         if header["_sel"] & 0x4:
-            dt += [("stab", "<f", 2)]
+            d_t += [("stab", "<f", 2)]
         if header["_sel"] & 0x8:
-            dt += [("flash", "<i4")]
+            d_t += [("flash", "<i4")]
         if header["_sel"] & 0x10:
-            dt += [("qual", "<i4")]
+            d_t += [("qual", "<i4")]
         if header["_sel"] & 0x20:
-            dt += [("status", "<i4")]
-        data = _read_from_file(file, dt, header["n"])
+            d_t += [("status", "<i4")]
+        data = _read_from_file(file, d_t, header["n"])
         _check_eof(file)
 
     header = _fix_header(header)
@@ -344,7 +347,7 @@ def read_met(file_name: str) -> tuple[dict, dict]:
             header |= _read_from_file(file, [("_n_add", "b")])
         else:
             raise ValueError(f"Error: MET file code {header['_code']} not supported")
-        dt = [
+        d_t = [
             ("time", "<i4"),
             ("rain", "b"),
             ("air_pressure", "<f"),
@@ -360,40 +363,40 @@ def read_met(file_name: str) -> tuple[dict, dict]:
             ("_relative_humidity_max", "<f"),
         ]
         if header["_n_add"] & 0x1:
-            dt.append(("wind_speed", "<f"))
+            d_t.append(("wind_speed", "<f"))
             hdt.append(("_wind_speed_min", "<f"))
             hdt.append(("_wind_speed_max", "<f"))
         if header["_n_add"] & 0x2:
-            dt.append(("wind_direction", "<f"))
+            d_t.append(("wind_direction", "<f"))
             hdt.append(("_wind_direction_min", "<f"))
             hdt.append(("_wind_direction_max", "<f"))
         if header["_n_add"] & 0x4:
-            dt.append(("rainfall_rate", "<f"))
+            d_t.append(("rainfall_rate", "<f"))
             hdt.append(("_rainfall_rate_min", "<f"))
             hdt.append(("_rainfall_rate_max", "<f"))
         if header["_n_add"] & 0x8:
-            dt.append(("_adds4", "<f"))
+            d_t.append(("_adds4", "<f"))
             hdt.append(("_adds4_min", "<f"))
             hdt.append(("_adds4_max", "<f"))
         if header["_n_add"] & 0x10:
-            dt.append(("_adds5", "<f"))
+            d_t.append(("_adds5", "<f"))
             hdt.append(("_adds5_min", "<f"))
             hdt.append(("_adds5_max", "<f"))
         if header["_n_add"] & 0x20:
-            dt.append(("_adds6", "<f"))
+            d_t.append(("_adds6", "<f"))
             hdt.append(("_adds6_min", "<f"))
             hdt.append(("_adds6_max", "<f"))
         if header["_n_add"] & 0x40:
-            dt.append(("_adds7", "<f"))
+            d_t.append(("_adds7", "<f"))
             hdt.append(("_adds7_min", "<f"))
             hdt.append(("_adds7_max", "<f"))
         if header["_n_add"] & 0x80:
-            dt.append(("_adds8", "<f"))
+            d_t.append(("_adds8", "<f"))
             hdt.append(("_adds8_min", "<f"))
             hdt.append(("_adds8_max", "<f"))
         hdt.append(("_time_ref", "<i4"))
         header |= _read_from_file(file, hdt)
-        data = _read_from_file(file, dt, header["n"])
+        data = _read_from_file(file, d_t, header["n"])
         _check_eof(file)
 
     data["relative_humidity"] /= 100  # Converted in the original code
@@ -416,20 +419,9 @@ def read_cbh(file_name: str) -> tuple[dict, dict]:
                 ("_time_ref", "<i4"),
             ],
         )
-        match header["_code"]:
-            case 67777499:
-                version = 1
-            # case 671112496:
-            #     version = 2
-            # case 671112000:
-            #     version = 3
-            case _:
-                raise ValueError(
-                    f"Error: CBH file code {header['_code']} not supported"
-                )
 
-        dt = [("time", "<i4"), ("rain", "b"), ("cbh", "<f")]
-        data = _read_from_file(file, dt, header["n"])
+        d_t = [("time", "<i4"), ("rain", "b"), ("cbh", "<f")]
+        data = _read_from_file(file, d_t, header["n"])
         _check_eof(file)
 
     header = _fix_header(header)
@@ -458,7 +450,7 @@ def _check_eof(file: BinaryIO):
 
 
 def _decode_angles(
-    x: np.ndarray, method: Literal[1, 2]
+    x_x: np.ndarray, method: Literal[1, 2]
 ) -> tuple[np.ndarray, np.ndarray]:
     """
     Decode elevation and azimuth angles.
@@ -477,19 +469,19 @@ def _decode_angles(
         # the formula is El-100°. For decoding to make sense, Az and El must be
         # stored in precision of 0.1 degrees.
 
-        ele_offset = np.zeros(x.shape)
-        ind_offset_corr = x >= 1e6
+        ele_offset = np.zeros(x_x.shape)
+        ind_offset_corr = x_x >= 1e6
         ele_offset[ind_offset_corr] = 100
-        x = np.copy(x)
-        x[ind_offset_corr] -= 1e6
+        x_x = np.copy(x_x)
+        x_x[ind_offset_corr] -= 1e6
 
-        azi = (np.abs(x) // 100) / 10
-        ele = x - np.sign(x) * azi * 1000 + ele_offset
+        azi = (np.abs(x_x) // 100) / 10
+        ele = x_x - np.sign(x_x) * azi * 1000 + ele_offset
     else:
         # First 5 decimal digits is azimuth*100, last 5 decimal digits is
         # elevation*100, sign of Ang is sign of elevation.
-        ele = np.sign(x) * (np.abs(x) // 1e5) / 100
-        azi = (np.abs(x) - np.abs(ele) * 1e7) / 100
+        ele = np.sign(x_x) * (np.abs(x_x) // 1e5) / 100
+        azi = (np.abs(x_x) - np.abs(ele) * 1e7) / 100
 
     return ele, azi
 

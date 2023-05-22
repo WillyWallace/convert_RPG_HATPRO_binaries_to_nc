@@ -1,3 +1,7 @@
+"""
+This module contains the conversion routines
+"""
+
 import xarray as xr
 from rpg_bin import RpgBin
 from utils import get_file_list
@@ -35,6 +39,7 @@ def convert_data(
 
 
 def make_xarray(rpg, data_type):
+    """make xarray dataset from dict"""
 
     # global coords, data_set
     allvarnames = []

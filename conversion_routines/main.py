@@ -1,23 +1,29 @@
-import numpy as np
+"""
+This is the main routine which calls all other.
+"""
+
 from os import path, makedirs
 from convert_rpg_bin import convert_data, make_xarray
 from get_attributes import get_data_attributes, add_global_attrs
 from utils import get_file_list
 
-raw_path = '../example_data/binary/'
-out_path = '../example_data/nc/'
+import numpy as np
 
-data_types = ['cbh', 'irt']
 
-years = [2020]
-months = [7]
-days = np.arange(15, 17)
+RAW_PATH = '../example_data/binary/'
+OUT_PATH = '../example_data/nc/'
 
-for yy in years:
-    for mm in months:
-        for dd in days:
-            for data_type in data_types:
-                path_to_files = raw_path + \
+DATA_TYPES = ['cbh', 'irt']
+
+YEARS = [2020]
+MONTHS = [7]
+DAYS = np.arange(15, 17)
+
+for yy in YEARS:
+    for mm in MONTHS:
+        for dd in DAYS:
+            for data_type in DATA_TYPES:
+                path_to_files = RAW_PATH + \
                                 'Y' + str(yy) + '/' + \
                                 'M' + str(mm).zfill(2) + '/' + \
                                 'D' + str(dd).zfill(2) + '/'
@@ -43,9 +49,9 @@ for yy in years:
                     # write output netcdf
                     outfilename = str(yy).zfill(2) + str(mm).zfill(2) + str(dd).zfill(2) + \
                         '_' + data_type
-                    out_path_1 = out_path + data_type + '/' + \
-                        str(yy).zfill(2) + '/' + \
-                        str(mm).zfill(2) + '/'
+                    out_path_1 = OUT_PATH + data_type + '/' + \
+                                 str(yy).zfill(2) + '/' + \
+                                 str(mm).zfill(2) + '/'
                     if not path.exists(out_path_1):
                         makedirs(out_path_1)
                     data.to_netcdf(out_path_1 + outfilename + '.nc')
