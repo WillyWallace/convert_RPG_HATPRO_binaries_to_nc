@@ -12,7 +12,7 @@ PATH_TO_FILES = '../example_data/binary/Y2020/M07/D16/'
 def test_convert_data():
     """unit test for main class"""
     obj = convert_data(PATH_TO_FILES, 'irt')
-    print(obj.header)
+    # print(obj.header)
     # assert obj.filename is FILE
     assert obj.header['_code'] == 671112000
     assert np.allclose(obj.header['_xmin'], -45.383614)
@@ -21,4 +21,3 @@ def test_convert_data():
     assert obj.header['_n_f'] == 1
     assert np.allclose(obj.header['_f'], 10.5)
     assert obj.header['n'] == 36760
-

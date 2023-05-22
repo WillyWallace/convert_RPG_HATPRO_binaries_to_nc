@@ -27,6 +27,7 @@ def convert_data(
         rpg_bin = RpgBin(file_list_bls)
     elif data_type == 'irt':
         file_list_irt = get_file_list(path_to_files, "IRT")
+        print(file_list_irt)
         rpg_bin = RpgBin(file_list_irt)
         rpg_bin.data['ir_wavelength'] = rpg_bin.header['_f']
     elif data_type == 'cbh':
