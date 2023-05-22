@@ -6,7 +6,7 @@ import numpy as np
 
 from conversion_routines.convert_rpg_bin import convert_data
 
-PATH_TO_FILES = '../example_data/binary/Y2020/M07/D16/'
+PATH_TO_FILES = '/home/runner/work/convert_RPG_HATPRO_binaries_to_nc/convert_RPG_HATPRO_binaries_to_nc/example_data/binary/Y2020/M07/D16/'
 
 
 def test_convert_data():
