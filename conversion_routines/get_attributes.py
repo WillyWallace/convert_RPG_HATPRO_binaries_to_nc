@@ -43,6 +43,8 @@ def get_data_attributes(data, data_type: str):
             ["Data type " + data_type + " not supported for file writing."]
         )
 
+    attributes = {}
+
     if data_type in ("brt", "irt", "met", "cbh"):
         read_att = att_reader[data_type]
         attributes = dict(ATTRIBUTES_COM, **read_att)
