@@ -25,3 +25,6 @@ dependencies = [
 [project.urls]
 "Homepage" = "https://github.com/WillyWallace/convert_RPG_HATPRO_binaries_to_nc.git"
 "Bug Tracker" = "https://github.com/WillyWallace/convert_RPG_HATPRO_binaries_to_nc.git/issues"
+
+[tool.setuptools.packages]
+find = {}
