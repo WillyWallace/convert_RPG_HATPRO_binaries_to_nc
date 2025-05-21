@@ -11,14 +11,14 @@ from conversion_routines.get_attributes import get_data_attributes, add_global_a
 from conversion_routines.utils import get_file_list
 
 
-RAW_PATH = '../example_data/binary/'
-OUT_PATH = '../example_data/nc/'
+RAW_PATH = '../data/binary/'
+OUT_PATH = '../data/nc/'
 
 DATA_TYPES = ['cbh', 'irt']
 
 YEARS = [2020]
-MONTHS = [7]
-DAYS = np.arange(15, 17)
+MONTHS = [9]
+DAYS = np.arange(1, 31)
 
 for yy in YEARS:
     for mm in MONTHS:

@@ -43,14 +43,14 @@ This repository was created to convert binary to netcdf files of an microwave ra
 
 Below is an example of how run the script, which reads in the data and plots the results. This method relies on external dependencies such as xarray, numpy and others (see `setup.py`).
 
-1. Clone the repo
+1. Install from github
    ```sh
-   git clone https://github.com/WillyWallace/convert_RPG_HATPRO_binaries_to_nc.git
-   ```
-
-2. Install the package
-   ```sh
-   python setup.py install
+  git clone https://github.com/WillyWallace/convert_RPG_HATPRO_binaries_to_nc
+  cd convert_RPG_HATPRO_binaries_to_nc
+  python3 -m venv venv
+  source venv/bin/activate
+  pip3 install --upgrade pip
+  pip3 install .
    ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
