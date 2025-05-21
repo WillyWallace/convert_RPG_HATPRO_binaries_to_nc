@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "convert_RPG_HATPRO_binaries_to_nc"
+version = "1.0"
+authors = [
+  { name="Andreas Foth", email="author@example.com" },
+]
+description = "Python package for converting Microwave Radiometer HATPRO binaries to nc"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  "numpy",
+  "xarray",
+  "setuptools"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/WillyWallace/convert_RPG_HATPRO_binaries_to_nc.git"
+"Bug Tracker" = "https://github.com/WillyWallace/convert_RPG_HATPRO_binaries_to_nc.git/issues"
