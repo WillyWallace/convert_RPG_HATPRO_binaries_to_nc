@@ -45,12 +45,12 @@ Below is an example of how run the script, which reads in the data and plots the
 
 1. Install from github
    ```sh
-  git clone https://github.com/WillyWallace/convert_RPG_HATPRO_binaries_to_nc
-  cd convert_RPG_HATPRO_binaries_to_nc
-  python3 -m venv venv
-  source venv/bin/activate
-  pip3 install --upgrade pip
-  pip3 install .
+    git clone https://github.com/WillyWallace/convert_RPG_HATPRO_binaries_to_nc
+    cd convert_RPG_HATPRO_binaries_to_nc
+    python3 -m venv venv
+    source venv/bin/activate
+    pip3 install --upgrade pip
+    pip3 install .
    ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
